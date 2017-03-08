@@ -14,8 +14,6 @@ namespace docRenamer
 {
     public partial class documentManager : Form
     {
-        //private event EventHandler dragDropAction;
-
         public documentManager()
         {
             InitializeComponent();
@@ -28,7 +26,6 @@ namespace docRenamer
 
             rawMaterialCerts.DragEnter += dragDropEnter;
             rawMaterialCerts.DragEnter += dragDropEnter;
-
         }
 
 
@@ -53,6 +50,43 @@ namespace docRenamer
         private void dragDropEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.All;
+        }
+
+        private void CheckMenuItem(ToolStripMenuItem mnu, ToolStripMenuItem checked_item)
+        {
+            // Uncheck the menu items except checked_item.
+            foreach (ToolStripItem item in mnu.DropDownItems)
+            {
+                if (item is ToolStripMenuItem)
+                {
+                    ToolStripMenuItem menu_item = item as ToolStripMenuItem;
+                    menu_item.Checked = (menu_item == checked_item);
+                }
+            }
+        }
+
+        private void vmfgStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            CheckMenuItem(DsnStripMenuItem1, item);
+
+            ConstantsEnums.connectionStringName = item.Name;
+            // Do something with the menu selection.
+            // You could use a switch statement here.
+            // This example just displays the menu item's text.
+            MessageBox.Show(item.Text);
+        }
+
+        private void sand7StripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            CheckMenuItem(DsnStripMenuItem1, item);
+
+            ConstantsEnums.connectionStringName = item.Name;
+            // Do something with the menu selection.
+            // You could use a switch statement here.
+            // This example just displays the menu item's text.
+            MessageBox.Show(item.Text);
         }
     }
 
@@ -244,12 +278,12 @@ namespace docRenamer
             string fileNameOnly = Path.GetFileNameWithoutExtension(path);
             string extension = Path.GetExtension(path);
             string directoryPath = Path.GetDirectoryName(path);
-            string newFullPath = directoryPath + fileNameOnly + extension;
+            string newFullPath = path;
 
             while (File.Exists(newFullPath))
             {
                 string tempFileName = string.Format("{0}({1})", fileNameOnly, count++);
-                newFullPath = Path.Combine(path, tempFileName + extension);
+                newFullPath = Path.Combine(directoryPath, tempFileName + extension);
             }
 
             return newFullPath;

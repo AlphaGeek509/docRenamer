@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace docRenamer
 {
-    public static class ConstantsEnums
+    public class ConstantsEnums
     {
-        public static readonly string connectionStringName = "ConnectinString (SAND7)";
+        public static string connectionStringName = "VMFG";
     }
 }
