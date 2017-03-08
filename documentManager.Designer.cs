@@ -1,6 +1,6 @@
 ﻿namespace docRenamer
 {
-    partial class Form1
+    partial class documentManager
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(documentManager));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.customerPurchaseOrders = new System.Windows.Forms.Label();
             this.rawMaterialCerts = new System.Windows.Forms.Label();
@@ -65,8 +65,16 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.fileActionsSupplierPacklist = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.fileActionsSupplierPacklistsCopy = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.fileActionsSupplierPacklist.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -78,26 +86,25 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.customerPurchaseOrders, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.rawMaterialCerts, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.supplierPacklist, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label4, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.customerPurchaseOrders, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 27);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(324, 291);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 23.44689F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 76.55311F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(655, 288);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // customerPurchaseOrders
             // 
             this.customerPurchaseOrders.AllowDrop = true;
             this.customerPurchaseOrders.AutoSize = true;
-            this.customerPurchaseOrders.Dock = System.Windows.Forms.DockStyle.Fill;
             this.customerPurchaseOrders.Location = new System.Drawing.Point(3, 0);
             this.customerPurchaseOrders.Name = "customerPurchaseOrders";
-            this.customerPurchaseOrders.Size = new System.Drawing.Size(156, 145);
+            this.customerPurchaseOrders.Size = new System.Drawing.Size(133, 13);
             this.customerPurchaseOrders.TabIndex = 0;
             this.customerPurchaseOrders.Text = "Customer Purchase Orders";
             this.customerPurchaseOrders.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -107,9 +114,9 @@
             this.rawMaterialCerts.AllowDrop = true;
             this.rawMaterialCerts.AutoSize = true;
             this.rawMaterialCerts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rawMaterialCerts.Location = new System.Drawing.Point(165, 0);
+            this.rawMaterialCerts.Location = new System.Drawing.Point(330, 0);
             this.rawMaterialCerts.Name = "rawMaterialCerts";
-            this.rawMaterialCerts.Size = new System.Drawing.Size(156, 145);
+            this.rawMaterialCerts.Size = new System.Drawing.Size(322, 67);
             this.rawMaterialCerts.TabIndex = 1;
             this.rawMaterialCerts.Text = "Raw Material Certs";
             this.rawMaterialCerts.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -118,13 +125,12 @@
             // 
             this.supplierPacklist.AllowDrop = true;
             this.supplierPacklist.AutoSize = true;
-            this.supplierPacklist.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.supplierPacklist.Location = new System.Drawing.Point(3, 145);
+            this.supplierPacklist.Location = new System.Drawing.Point(3, 0);
             this.supplierPacklist.Name = "supplierPacklist";
-            this.supplierPacklist.Size = new System.Drawing.Size(156, 146);
+            this.supplierPacklist.Size = new System.Drawing.Size(90, 13);
             this.supplierPacklist.TabIndex = 2;
             this.supplierPacklist.Tag = "1";
-            this.supplierPacklist.Text = "Supplier Packlist";
+            this.supplierPacklist.Text = "Supplier Packlists";
             this.supplierPacklist.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label4
@@ -132,11 +138,11 @@
             this.label4.AllowDrop = true;
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(165, 145);
+            this.label4.Location = new System.Drawing.Point(330, 67);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(156, 146);
+            this.label4.Size = new System.Drawing.Size(322, 221);
             this.label4.TabIndex = 3;
-            this.label4.Text = "label4";
+            this.label4.Text = "Supplier RFQs";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // menuStrip1
@@ -149,7 +155,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.menuStrip1.Size = new System.Drawing.Size(324, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(696, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -377,18 +383,74 @@
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 321);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 529);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(324, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(696, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 1;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Controls.Add(this.supplierPacklist, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.fileActionsSupplierPacklist, 0, 1);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 70);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(286, 173);
+            this.tableLayoutPanel2.TabIndex = 4;
+            // 
+            // fileActionsSupplierPacklist
+            // 
+            this.fileActionsSupplierPacklist.Controls.Add(this.flowLayoutPanel1);
+            this.fileActionsSupplierPacklist.Location = new System.Drawing.Point(3, 89);
+            this.fileActionsSupplierPacklist.Name = "fileActionsSupplierPacklist";
+            this.fileActionsSupplierPacklist.Size = new System.Drawing.Size(200, 81);
+            this.fileActionsSupplierPacklist.TabIndex = 3;
+            this.fileActionsSupplierPacklist.TabStop = false;
+            this.fileActionsSupplierPacklist.Text = "File Actions";
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.fileActionsSupplierPacklistsCopy);
+            this.flowLayoutPanel1.Controls.Add(this.checkBox2);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 16);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(194, 62);
+            this.flowLayoutPanel1.TabIndex = 0;
+            // 
+            // fileActionsSupplierPacklistsCopy
+            // 
+            this.fileActionsSupplierPacklistsCopy.AutoSize = true;
+            this.fileActionsSupplierPacklistsCopy.Location = new System.Drawing.Point(3, 3);
+            this.fileActionsSupplierPacklistsCopy.Name = "fileActionsSupplierPacklistsCopy";
+            this.fileActionsSupplierPacklistsCopy.Size = new System.Drawing.Size(69, 17);
+            this.fileActionsSupplierPacklistsCopy.TabIndex = 0;
+            this.fileActionsSupplierPacklistsCopy.Text = "Copy File";
+            this.fileActionsSupplierPacklistsCopy.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(3, 26);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(72, 17);
+            this.checkBox2.TabIndex = 1;
+            this.checkBox2.Text = "Move File";
+            this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(324, 343);
+            this.ClientSize = new System.Drawing.Size(696, 551);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -399,6 +461,11 @@
             this.tableLayoutPanel1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
+            this.fileActionsSupplierPacklist.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -442,6 +509,11 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.Label customerPurchaseOrders;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.GroupBox fileActionsSupplierPacklist;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.CheckBox fileActionsSupplierPacklistsCopy;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
 
