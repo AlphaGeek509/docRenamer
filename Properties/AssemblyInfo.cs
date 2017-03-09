@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("docRenamer")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Document Manager")]
+[assembly: AssemblyDescription("Dyanmically manage electronic documents for Lyn-Tron's ERP system")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("docRenamer")]
+[assembly: AssemblyCompany("Lyn-Tron, Inc.")]
+[assembly: AssemblyProduct("docMgr")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

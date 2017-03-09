@@ -61,12 +61,22 @@ namespace docManager.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Icon documents {
+        internal static System.Drawing.Bitmap documents {
             get {
                 object obj = ResourceManager.GetObject("documents", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap documentsPng {
+            get {
+                object obj = ResourceManager.GetObject("documentsPng", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

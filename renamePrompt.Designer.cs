@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.promptMsg = new System.Windows.Forms.Label();
             this.renameValue = new System.Windows.Forms.TextBox();
             this.btnSubmit = new System.Windows.Forms.Button();
             this.flowLayoutPanel1.SuspendLayout();
@@ -37,7 +37,7 @@
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.label1);
+            this.flowLayoutPanel1.Controls.Add(this.promptMsg);
             this.flowLayoutPanel1.Controls.Add(this.renameValue);
             this.flowLayoutPanel1.Controls.Add(this.btnSubmit);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -46,14 +46,14 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(438, 49);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
-            // label1
+            // promptMsg
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(132, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Please provide new name:";
+            this.promptMsg.AutoSize = true;
+            this.promptMsg.Location = new System.Drawing.Point(3, 0);
+            this.promptMsg.Name = "promptMsg";
+            this.promptMsg.Size = new System.Drawing.Size(132, 13);
+            this.promptMsg.TabIndex = 0;
+            this.promptMsg.Text = "Please provide new name:";
             // 
             // renameValue
             // 
@@ -92,7 +92,7 @@
         #endregion
 
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Label label1;
+        public System.Windows.Forms.Label promptMsg;
         public System.Windows.Forms.TextBox renameValue;
         private System.Windows.Forms.Button btnSubmit;
     }

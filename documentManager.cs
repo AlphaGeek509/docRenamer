@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using docManager;
 
 
 [assembly: log4net.Config.XmlConfigurator(Watch=true)]
@@ -109,32 +110,40 @@ namespace docRenamer
 
         private void documentManager_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (WindowState == FormWindowState.Maximized)
+            try
             {
-                docManager.Properties.Settings.Default.Location = RestoreBounds.Location;
-                docManager.Properties.Settings.Default.Size = RestoreBounds.Size;
-                docManager.Properties.Settings.Default.Maximized = true;
-                docManager.Properties.Settings.Default.Minimized = false;
-            }
-            else if (WindowState == FormWindowState.Normal)
-            {
-                docManager.Properties.Settings.Default.Location = Location;
-                docManager.Properties.Settings.Default.Size = Size;
-                docManager.Properties.Settings.Default.Maximized = false;
-                docManager.Properties.Settings.Default.Minimized = false;
-            }
-            else
-            {
-                docManager.Properties.Settings.Default.Location = RestoreBounds.Location;
-                docManager.Properties.Settings.Default.Size = RestoreBounds.Size;
-                docManager.Properties.Settings.Default.Maximized = false;
-                docManager.Properties.Settings.Default.Minimized = true;
-            }
+                if (WindowState == FormWindowState.Maximized)
+                {
+                    docManager.Properties.Settings.Default.Location = RestoreBounds.Location;
+                    docManager.Properties.Settings.Default.Size = RestoreBounds.Size;
+                    docManager.Properties.Settings.Default.Maximized = true;
+                    docManager.Properties.Settings.Default.Minimized = false;
+                }
+                else if (WindowState == FormWindowState.Normal)
+                {
+                    docManager.Properties.Settings.Default.Location = Location;
+                    docManager.Properties.Settings.Default.Size = Size;
+                    docManager.Properties.Settings.Default.Maximized = false;
+                    docManager.Properties.Settings.Default.Minimized = false;
+                }
+                else
+                {
+                    docManager.Properties.Settings.Default.Location = RestoreBounds.Location;
+                    docManager.Properties.Settings.Default.Size = RestoreBounds.Size;
+                    docManager.Properties.Settings.Default.Maximized = false;
+                    docManager.Properties.Settings.Default.Minimized = true;
+                }
 
-            docManager.Properties.Settings.Default.fileActionCopy = radCopy.Checked;
-            docManager.Properties.Settings.Default.fileActionMove = radMove.Checked;
-            docManager.Properties.Settings.Default.DSN = ConstantsEnums.connectionStringName;
-            docManager.Properties.Settings.Default.Save();
+                docManager.Properties.Settings.Default.fileActionCopy = radCopy.Checked;
+                docManager.Properties.Settings.Default.fileActionMove = radMove.Checked;
+                docManager.Properties.Settings.Default.DSN = ConstantsEnums.connectionStringName;
+                docManager.Properties.Settings.Default.Save();
+            } catch (Exception ex)
+            {
+                log.Error("Unable to save user settings: " + ex.Message);
+                throw new Exception("Error in saving user settings: (" + ex.Message + ")");
+            }
+            
 
             log.Info("Program is closing");
         }
@@ -169,11 +178,19 @@ namespace docRenamer
                     .OfType<ToolStripMenuItem>()
                     .Single();
                 item.Checked = true;
+                log.Info("Loaded user settings from app.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Unable to set user settings.");
+                log.Error("Unable to get users settings: " + ex.Message + ")");
+                throw new Exception("Unable to set user settings:" + ex.Message + ")");
             }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            aboutBox frmAbout = new aboutBox();
+            frmAbout.Show();
         }
     }
 
@@ -223,7 +240,7 @@ namespace docRenamer
                 docType     = "SUPPLIER_PACKLISTS";
                 sourcePath  = file;
                 targetPath = setTargetPath();
-                targetRenamed = promptForRename();
+                targetRenamed = promptForRename("Must provide a Receiver ID (R#) to proceed.");
                 
                 //Validate that the receiver is in Visual before proceeding.
                 var doc = new RECEIVER();
@@ -322,16 +339,19 @@ namespace docRenamer
                 if (!Directory.Exists(targetPath))
                 {
                     Directory.CreateDirectory(targetPath);
+                    log.Info("Directory not found and created: (" + targetPath + ")");
                 }
 
                 // To copy a file to another location and overwrite the destination file if it already exists.
                 if(this.copy)
                 {
                     File.Copy(sourceFile, destFile, true);
+                    log.Info("File copied successfully - src: (" + sourceFile + ") target: (" + destFile + ")");
                 }
                 else if(this.move)
                 {
                     File.Move(sourceFile, destFile);
+                    log.Info("File moved successfully - src: (" + sourceFile + ") target: (" + destFile + ")");
                 }
 
                 #region CopyDirectories
@@ -360,19 +380,10 @@ namespace docRenamer
                 //}
                 #endregion
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                log.Error("Unable to perform transportFiles function: " + ex.Message);
                 throw new Exception("An error occured during the file transport process.");
-            }
-        }
-
-        public void renameFile(string srcName, string destName)
-        {
-            try
-            {
-                File.Move(srcName, destName);
-            } catch (Exception) {
-                throw new Exception("An error occured in renaming your file.");
             }
         }
 
@@ -388,6 +399,7 @@ namespace docRenamer
             {
                 string tempFileName = string.Format("{0}({1})", fileNameOnly, count++);
                 newFullPath = Path.Combine(directoryPath, tempFileName + extension);
+                log.Info("Submitted file name (" + newFullPath + ") was found.  Auto rename: (" + tempFileName + extension + ")");
             }
 
             return newFullPath;
@@ -441,24 +453,19 @@ namespace docRenamer
             
         }
 
-        /// <summary>
-        /// An "interface" for fileAction.transportFiles
-        /// </summary>
-        public void copyFileToServer()
-        {
-            this.fileAct.transportFiles(this.sourcePath, this.targetPath);
-        }
 
-        public string promptForRename()
+        public string promptForRename(string messagePrompt)
         {
             renamePrompt frmRename = new renamePrompt();
 
+            frmRename.promptMsg.Text = messagePrompt;
             if (frmRename.ShowDialog() == DialogResult.OK)
             {
                 return frmRename.renameValue.Text.Trim();
             }
             else
             {
+                log.Error("User did not input a new name.");
                 throw new Exception("You must rename the file to proceed.");
             }
         }
