@@ -459,6 +459,7 @@ namespace docRenamer
             renamePrompt frmRename = new renamePrompt();
 
             frmRename.promptMsg.Text = messagePrompt;
+            frmRename.renameValue.Focus();
             if (frmRename.ShowDialog() == DialogResult.OK)
             {
                 return frmRename.renameValue.Text.Trim();

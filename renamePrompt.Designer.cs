@@ -37,13 +37,14 @@
             // 
             // flowLayoutPanel1
             // 
+            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.flowLayoutPanel1.Controls.Add(this.promptMsg);
             this.flowLayoutPanel1.Controls.Add(this.renameValue);
-            this.flowLayoutPanel1.Controls.Add(this.btnSubmit);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(438, 49);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(343, 55);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // promptMsg
@@ -51,12 +52,14 @@
             this.promptMsg.AutoSize = true;
             this.promptMsg.Location = new System.Drawing.Point(3, 0);
             this.promptMsg.Name = "promptMsg";
-            this.promptMsg.Size = new System.Drawing.Size(132, 13);
+            this.promptMsg.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
+            this.promptMsg.Size = new System.Drawing.Size(132, 18);
             this.promptMsg.TabIndex = 0;
             this.promptMsg.Text = "Please provide new name:";
             // 
             // renameValue
             // 
+            this.renameValue.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.renameValue.Location = new System.Drawing.Point(141, 3);
             this.renameValue.MaxLength = 78;
             this.renameValue.Name = "renameValue";
@@ -65,8 +68,9 @@
             // 
             // btnSubmit
             // 
+            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSubmit.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSubmit.Location = new System.Drawing.Point(344, 3);
+            this.btnSubmit.Location = new System.Drawing.Point(263, 70);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(75, 23);
             this.btnSubmit.TabIndex = 2;
@@ -79,10 +83,14 @@
             this.AcceptButton = this.btnSubmit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(438, 49);
+            this.ClientSize = new System.Drawing.Size(342, 96);
             this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.btnSubmit);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "renamePrompt";
-            this.Text = "renamePrompt";
+            this.ShowIcon = false;
+            this.Text = "Rename Prompt";
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
