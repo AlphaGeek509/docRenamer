@@ -1,8 +1,10 @@
 ﻿using docRenamer.TableClasses;
+using docManager.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,10 +12,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
+[assembly: log4net.Config.XmlConfigurator(Watch=true)]
+
 namespace docRenamer
 {
     public partial class documentManager : Form
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public documentManager()
         {
             InitializeComponent();
@@ -26,6 +33,8 @@ namespace docRenamer
 
             rawMaterialCerts.DragEnter += dragDropEnter;
             rawMaterialCerts.DragEnter += dragDropEnter;
+
+            log.Info("Program started");
         }
 
 
@@ -33,14 +42,17 @@ namespace docRenamer
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             Label docType = (Label)sender;
-
+            
             foreach (string file in files) {
                 try {
                     Document doc = DocumentFactory.GetDocument(docType.Text.Replace(" ", "_").ToUpper(), file);
-                    doc.fileAct.copy = true;
+                    doc.fileAct.copy = radCopy.Checked;
+                    doc.fileAct.move = radMove.Checked;
+
                     doc.fileAct.transportFiles(doc.sourcePath, doc.targetPath, doc.targetRenamed);
                 }
                 catch (Exception exc) {
+                    log.Error("Problem in executing file: " + file + " (" + exc.Message + ")");
                     MessageBox.Show(exc.Message.ToString());
                 }
             }
@@ -65,28 +77,103 @@ namespace docRenamer
             }
         }
 
+        /// <summary>
+        /// Change the connecting DSN to VMFG
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void vmfgStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             CheckMenuItem(DsnStripMenuItem1, item);
-
-            ConstantsEnums.connectionStringName = item.Name;
-            // Do something with the menu selection.
-            // You could use a switch statement here.
-            // This example just displays the menu item's text.
-            MessageBox.Show(item.Text);
+            ConstantsEnums.connectionStringName = item.Text;
         }
 
+
+        /// <summary>
+        /// Change the connecting DSN to SAND7
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void sand7StripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             CheckMenuItem(DsnStripMenuItem1, item);
+            ConstantsEnums.connectionStringName = item.Text;
+        }
 
-            ConstantsEnums.connectionStringName = item.Name;
-            // Do something with the menu selection.
-            // You could use a switch statement here.
-            // This example just displays the menu item's text.
-            MessageBox.Show(item.Text);
+        private void logToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(ConstantsEnums.logFile);
+        }
+
+        private void documentManager_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+            {
+                docManager.Properties.Settings.Default.Location = RestoreBounds.Location;
+                docManager.Properties.Settings.Default.Size = RestoreBounds.Size;
+                docManager.Properties.Settings.Default.Maximized = true;
+                docManager.Properties.Settings.Default.Minimized = false;
+            }
+            else if (WindowState == FormWindowState.Normal)
+            {
+                docManager.Properties.Settings.Default.Location = Location;
+                docManager.Properties.Settings.Default.Size = Size;
+                docManager.Properties.Settings.Default.Maximized = false;
+                docManager.Properties.Settings.Default.Minimized = false;
+            }
+            else
+            {
+                docManager.Properties.Settings.Default.Location = RestoreBounds.Location;
+                docManager.Properties.Settings.Default.Size = RestoreBounds.Size;
+                docManager.Properties.Settings.Default.Maximized = false;
+                docManager.Properties.Settings.Default.Minimized = true;
+            }
+
+            docManager.Properties.Settings.Default.fileActionCopy = radCopy.Checked;
+            docManager.Properties.Settings.Default.fileActionMove = radMove.Checked;
+            docManager.Properties.Settings.Default.DSN = ConstantsEnums.connectionStringName;
+            docManager.Properties.Settings.Default.Save();
+
+            log.Info("Program is closing");
+        }
+
+        private void documentManager_Load(object sender, EventArgs e)
+        {
+            if (docManager.Properties.Settings.Default.Maximized)
+            {
+                WindowState = FormWindowState.Maximized;
+                Location = docManager.Properties.Settings.Default.Location;
+                Size = docManager.Properties.Settings.Default.Size;
+            }
+            else if (docManager.Properties.Settings.Default.Minimized)
+            {
+                WindowState = FormWindowState.Minimized;
+                Location = docManager.Properties.Settings.Default.Location;
+                Size = docManager.Properties.Settings.Default.Size;
+            }
+            else
+            {
+                Location = docManager.Properties.Settings.Default.Location;
+                Size = docManager.Properties.Settings.Default.Size;
+            }
+
+            try
+            {
+                radCopy.Checked = docManager.Properties.Settings.Default.fileActionCopy;
+                radMove.Checked = docManager.Properties.Settings.Default.fileActionMove;
+                string dsnName = docManager.Properties.Settings.Default.DSN.ToLower() + "StripMenuItem";
+                ToolStripMenuItem item = menuStrip1.Items
+                    .Find(dsnName, true)
+                    .OfType<ToolStripMenuItem>()
+                    .Single();
+                item.Checked = true;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Unable to set user settings.");
+            }
         }
     }
 
@@ -127,9 +214,12 @@ namespace docRenamer
     /// </summary>
     public class supplierPacklist : Document
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public supplierPacklist(string file)
         {
             try {
+                log.Info("Loading Supplier Packlist class.");
                 docType     = "SUPPLIER_PACKLISTS";
                 sourcePath  = file;
                 targetPath = setTargetPath();
@@ -140,7 +230,12 @@ namespace docRenamer
                 var isValid = doc.Count(where: "WHERE ID=:0", args: targetRenamed);
                 if (isValid != 1)
                 {
+                    log.Error("Could not find target file: (" + targetRenamed + ") in the DB: " + ConstantsEnums.connectionStringName);
                     throw new Exception("The Receiver ID you entered is not found in Visual.");
+                }
+                else
+                {
+                    log.Info("target file: (" + targetRenamed + ") was found in the DB: " + ConstantsEnums.connectionStringName);
                 }
             }
             catch (Exception e)
@@ -155,11 +250,18 @@ namespace docRenamer
     /// </summary>
     public class SupplierRfq : Document
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public SupplierRfq(string file)
         {
-            docType = "SUPPLIER_RFQS";
-            sourcePath = file;
-            targetPath = setTargetPath();
+            try
+            {
+                log.Info("Loading Supplier Packlist class.");
+                docType = "SUPPLIER_RFQS";
+                sourcePath = file;
+                targetPath = setTargetPath();
+            } catch (Exception e) {
+                throw e;
+            }
         }
     }
 
@@ -168,6 +270,7 @@ namespace docRenamer
     /// </summary>
     public class CustomerPurchaseOrders : Document
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public CustomerPurchaseOrders(string file)
         {
             docType = "CUSTOMER_PURCHASE_ORDERS";
@@ -181,6 +284,7 @@ namespace docRenamer
     /// </summary>
     public class fileAction
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public bool move { get; set; }
         public bool copy { get; set; }
 
@@ -295,6 +399,7 @@ namespace docRenamer
     /// </summary>
     public class Document : iDocument
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public string serverName    { get; set; }
         public string sourcePath    { get; set; }
         public string targetPath    { get; set; }
@@ -358,4 +463,6 @@ namespace docRenamer
             }
         }
     }
+
+
 }
