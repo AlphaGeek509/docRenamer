@@ -29,11 +29,11 @@ namespace docRenamer
             supplierPacklist.DragDrop += dragDropAction;
             supplierPacklist.DragEnter += dragDropEnter;
             
-            customerPurchaseOrders.DragDrop += dragDropAction;
-            customerPurchaseOrders.DragEnter += dragDropEnter;
+            //customerPurchaseOrders.DragDrop += dragDropAction;
+            //customerPurchaseOrders.DragEnter += dragDropEnter;
 
-            rawMaterialCerts.DragEnter += dragDropEnter;
-            rawMaterialCerts.DragEnter += dragDropEnter;
+            //rawMaterialCerts.DragEnter += dragDropEnter;
+            //rawMaterialCerts.DragEnter += dragDropEnter;
 
             log.Info("Program started");
         }
@@ -435,7 +435,7 @@ namespace docRenamer
                 int count = 1;
                 string fileNameOnly = Path.GetFileNameWithoutExtension(this.sourcePath);
                 string extension = Path.GetExtension(this.sourcePath);
-                string path = this.serverName + "\\" + this.docType + "\\" + DateTime.Today.Year + "\\" + DateTime.Today.Month + "\\";
+                string path = this.serverName + "\\" + this.docType + "\\";
                 string newFullPath = path + fileNameOnly + extension;
 
                 while (File.Exists(newFullPath))
