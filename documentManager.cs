@@ -48,11 +48,11 @@ namespace docRenamer
             
             foreach (string file in files) {
                 try {
-                    Document doc = DocumentFactory.GetDocument(docType.Text.Replace(" ", "_").ToUpper(), file);
+                    dynamic doc = DocumentFactory.GetDocument(docType.Text.Replace(" ", "_").ToUpper(), file);
                     doc.fileAct.copy = radCopy.Checked;
                     doc.fileAct.move = radMove.Checked;
 
-                    doc.fileAct.transportFiles(doc.sourcePath, doc.targetPath, doc.targetRenamed);
+                    doc.savedFilePath = doc.fileAct.transportFiles(doc.sourcePath, doc.targetPath, doc.targetRenamed);
                     saved = doc.Save();
                 }
                 catch (Exception exc) {
@@ -254,6 +254,8 @@ namespace docRenamer
                 purchaseOrder = validatePurchaseOrder();
                 heat = validateHeat();
 
+                targetRenamed = heat;
+
                 docImagingObj = new LT_DOCUMENT_IMAGING();
             }
             catch (Exception e)
@@ -351,39 +353,39 @@ namespace docRenamer
         /// <returns></returns>
         public void transportFiles(string srcPath, string tgtPath, string renameValue = null)
         {
-            string fileName = Path.GetFileName(srcPath);
-            string fileExentsion = Path.GetExtension(srcPath);
-            string sourcePath = Path.GetDirectoryName(srcPath);
-            string targetPath = Path.GetDirectoryName(tgtPath);
+            string _fileName = Path.GetFileName(srcPath);
+            string _fileExentsion = Path.GetExtension(srcPath);
+            string _sourcePath = Path.GetDirectoryName(srcPath);
+            string _targetPath = Path.GetDirectoryName(tgtPath);
 
             // Use Path class to manipulate file and directory paths.
-            string sourceFile = Path.Combine(sourcePath, fileName);
-            string destFile = Path.Combine(targetPath, fileName);
+            string _sourceFile = Path.Combine(_sourcePath, _fileName);
+            string _destFile = Path.Combine(_targetPath, _fileName);
             if (renameValue != null)
             {
-                destFile = Path.Combine(targetPath, renameValue + fileExentsion);
+                _destFile = Path.Combine(_targetPath, renameValue + _fileExentsion);
             }
 
-            destFile = setUniqueFileName(destFile);
+            _destFile = setUniqueFileName(_destFile);
 
             try{
                 // To copy a folder's contents to a new location: Create a new target folder, if necessary.
-                if (!Directory.Exists(targetPath))
+                if (!Directory.Exists(_targetPath))
                 {
-                    Directory.CreateDirectory(targetPath);
-                    log.Info("Directory not found and created: (" + targetPath + ")");
+                    Directory.CreateDirectory(_targetPath);
+                    log.Info("Directory not found and created: (" + _targetPath + ")");
                 }
 
                 // To copy a file to another location and overwrite the destination file if it already exists.
                 if(this.copy)
                 {
-                    File.Copy(sourceFile, destFile, true);
-                    log.Info("File copied successfully - src: (" + sourceFile + ") target: (" + destFile + ")");
+                    File.Copy(_sourceFile, _destFile, true);
+                    log.Info("File copied successfully - src: (" + _sourceFile + ") target: (" + _destFile + ")");
                 }
                 else if(this.move)
                 {
-                    File.Move(sourceFile, destFile);
-                    log.Info("File moved successfully - src: (" + sourceFile + ") target: (" + destFile + ")");
+                    File.Move(_sourceFile, _destFile);
+                    log.Info("File moved successfully - src: (" + _sourceFile + ") target: (" + _destFile + ")");
                 }
 
                 #region CopyDirectories
@@ -509,7 +511,7 @@ namespace docRenamer
 
             //Validate that the receiver is in Visual before proceeding.
             var doc = new RECEIVER();
-            var isValid = doc.Count(where: "WHERE ID=:0", args: targetRenamed);
+            var isValid = doc.Count(where: "WHERE ID=:0", args: _value);
             if (isValid != 1)
             {
                 log.Error("Could not find target file: (" + targetRenamed + ") in the DB: " + ConstantsEnums.connectionStringName);
@@ -529,7 +531,7 @@ namespace docRenamer
 
             //Validate that the receiver is in Visual before proceeding.
             var doc = new LT_RAW_MATERIAL();
-            var isValid = doc.Count(where: "WHERE RAW_MTRL_ID=:0", args: targetRenamed);
+            var isValid = doc.Count(where: "WHERE RAW_MTRL_ID=:0", args: _rawMaterialId);
             if (isValid != 1)
             {
                 log.Error("Could not find target raw material id: (" + targetRenamed + ") in the DB: " + ConstantsEnums.connectionStringName);
@@ -548,7 +550,7 @@ namespace docRenamer
 
             //Validate that the receiver is in Visual before proceeding.
             var doc = new LT_RM_CONTAINER();
-            var isValid = doc.Count(where: "WHERE HEAT=:0", args: targetRenamed);
+            var isValid = doc.Count(where: "WHERE HEAT=:0", args: _heat);
             if (isValid != 1)
             {
                 log.Error("Could not find target heat: (" + targetRenamed + ") in the DB: " + ConstantsEnums.connectionStringName);
@@ -567,7 +569,7 @@ namespace docRenamer
 
             //Validate that the receiver is in Visual before proceeding.
             var doc = new PURCHASE_ORDER();
-            var isValid = doc.Count(where: "WHERE ID=:0", args: targetRenamed);
+            var isValid = doc.Count(where: "WHERE ID=:0", args: _value);
             if (isValid != 1)
             {
                 log.Error("Could not find target purchase order id: (" + targetRenamed + ") in the DB: " + ConstantsEnums.connectionStringName);

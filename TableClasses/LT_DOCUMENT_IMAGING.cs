@@ -12,7 +12,7 @@ namespace docManager.TableClasses
     {
         public LT_DOCUMENT_IMAGING() : this(includeSchema: true) { }
         public LT_DOCUMENT_IMAGING(bool includeSchema)
-            : base(ConstantsEnums.connectionStringName, includeSchema ? "SYSADM.LT_DOCUMENT_IMAGING" : "LT_DOCUMENT_IMAGING", "ID")
+            : base(ConstantsEnums.connectionStringName, includeSchema ? "SYSADM.LT_DOCUMENT_IMAGING" : "LT_DOCUMENT_IMAGING", "ID", "", "SYSADM.LT_DOCUMENT_IMAGING_SEQ")
         {
 
         }
