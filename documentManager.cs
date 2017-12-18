@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using docManager;
+using docManager.TableClasses;
 
 
 [assembly: log4net.Config.XmlConfigurator(Watch=true)]
@@ -28,13 +29,13 @@ namespace docRenamer
 
             supplierPacklist.DragDrop += dragDropAction;
             supplierPacklist.DragEnter += dragDropEnter;
+
+            materialCert.DragDrop += dragDropAction;
+            materialCert.DragEnter += dragDropEnter;
             
             //customerPurchaseOrders.DragDrop += dragDropAction;
             //customerPurchaseOrders.DragEnter += dragDropEnter;
-
-            //rawMaterialCerts.DragEnter += dragDropEnter;
-            //rawMaterialCerts.DragEnter += dragDropEnter;
-
+            
             log.Info("Program started");
         }
 
@@ -43,6 +44,7 @@ namespace docRenamer
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             Label docType = (Label)sender;
+            int saved = 0;
             
             foreach (string file in files) {
                 try {
@@ -51,6 +53,7 @@ namespace docRenamer
                     doc.fileAct.move = radMove.Checked;
 
                     doc.fileAct.transportFiles(doc.sourcePath, doc.targetPath, doc.targetRenamed);
+                    saved = doc.Save();
                 }
                 catch (Exception exc) {
                     log.Error("Problem in executing file: " + file + " (" + exc.Message + ")");
@@ -210,6 +213,8 @@ namespace docRenamer
                     return new SupplierRfq(file);
                 case "CUSTOMER_PURCHASE_ORDERS":
                     return new CustomerPurchaseOrders(file);
+                case "MATERIAL_CERTS":
+                    return new materialCert(file);
                 default:
                     throw new Exception("Unable to establish a document type with document name of: " + documentName);
             }
@@ -224,6 +229,43 @@ namespace docRenamer
         string docType       { get; set; }
         string targetRenamed { get; set; }
         fileAction fileAct   { get; set; }
+
+        int Save();
+    }
+
+    public class materialCert : Document
+    {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string rawMaterialId { get; set; }
+        private string purchaseOrder { get; set; }
+        private string heat { get; set; }
+        private LT_DOCUMENT_IMAGING docImagingObj { get; set; }
+
+        public materialCert(string file)
+        {
+            try
+            {
+                log.Info("Loading Material Cert class.");
+                docType = "MATERIAL_CERTS";
+                sourcePath = file;
+                targetPath = setTargetPath();
+
+                rawMaterialId = validateRawMaterialId();
+                purchaseOrder = validatePurchaseOrder();
+                heat = validateHeat();
+
+                docImagingObj = new LT_DOCUMENT_IMAGING();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public new int Save()
+        {
+            return docImagingObj.Insert(new{document_type="Mat_Cert", key2=purchaseOrder, key3=heat, key4=rawMaterialId});
+        }
     }
     
     /// <summary>
@@ -240,26 +282,16 @@ namespace docRenamer
                 docType     = "SUPPLIER_PACKLISTS";
                 sourcePath  = file;
                 targetPath = setTargetPath();
-                targetRenamed = promptForRename("Must provide a Receiver ID (R#) to proceed.");
-                
-                //Validate that the receiver is in Visual before proceeding.
-                var doc = new RECEIVER();
-                var isValid = doc.Count(where: "WHERE ID=:0", args: targetRenamed);
-                if (isValid != 1)
-                {
-                    log.Error("Could not find target file: (" + targetRenamed + ") in the DB: " + ConstantsEnums.connectionStringName);
-                    throw new Exception("The Receiver ID you entered is not found in Visual.");
-                }
-                else
-                {
-                    log.Info("target file: (" + targetRenamed + ") was found in the DB: " + ConstantsEnums.connectionStringName);
-                }
+
+                validateReceiver();
             }
             catch (Exception e)
             {
                 throw e;
             }
         }
+
+        
     }
 
     /// <summary>
@@ -469,6 +501,90 @@ namespace docRenamer
                 log.Error("User did not input a new name.");
                 throw new Exception("You must rename the file to proceed.");
             }
+        }
+
+        public string validateReceiver()
+        {
+            string _value = promptForRename("Must provide a Receiver ID (R#) to proceed.");
+
+            //Validate that the receiver is in Visual before proceeding.
+            var doc = new RECEIVER();
+            var isValid = doc.Count(where: "WHERE ID=:0", args: targetRenamed);
+            if (isValid != 1)
+            {
+                log.Error("Could not find target file: (" + targetRenamed + ") in the DB: " + ConstantsEnums.connectionStringName);
+                throw new Exception("The Receiver ID you entered is not found in Visual.");
+            }
+            else
+            {
+                log.Info("target file: (" + targetRenamed + ") was found in the DB: " + ConstantsEnums.connectionStringName);
+            }
+
+            return _value;
+        }
+
+        public string validateRawMaterialId()
+        {
+            string _rawMaterialId = promptForRename("Must provide a Raw Material ID to proceed.");
+
+            //Validate that the receiver is in Visual before proceeding.
+            var doc = new LT_RAW_MATERIAL();
+            var isValid = doc.Count(where: "WHERE RAW_MTRL_ID=:0", args: targetRenamed);
+            if (isValid != 1)
+            {
+                log.Error("Could not find target raw material id: (" + targetRenamed + ") in the DB: " + ConstantsEnums.connectionStringName);
+                throw new Exception("The Raw Material ID you entered is not found in Raw Material Maintenance.");
+            }
+            else
+            {
+                log.Info("target file: (" + targetRenamed + ") was found in the DB: " + ConstantsEnums.connectionStringName);
+            }
+            return _rawMaterialId;
+        }
+
+        public string validateHeat()
+        {
+            string _heat = promptForRename("Must provide a Heat to proceed.");
+
+            //Validate that the receiver is in Visual before proceeding.
+            var doc = new LT_RM_CONTAINER();
+            var isValid = doc.Count(where: "WHERE HEAT=:0", args: targetRenamed);
+            if (isValid != 1)
+            {
+                log.Error("Could not find target heat: (" + targetRenamed + ") in the DB: " + ConstantsEnums.connectionStringName);
+                throw new Exception("The Heat you entered is not found in Raw Material Maintenance.");
+            }
+            else
+            {
+                log.Info("target file: (" + targetRenamed + ") was found in the DB: " + ConstantsEnums.connectionStringName);
+            }
+            return _heat;
+        }
+
+        public string validatePurchaseOrder()
+        {
+            string _value = promptForRename("Must provide a Lyn-Tron Purchase Order # to proceed.");
+
+            //Validate that the receiver is in Visual before proceeding.
+            var doc = new PURCHASE_ORDER();
+            var isValid = doc.Count(where: "WHERE ID=:0", args: targetRenamed);
+            if (isValid != 1)
+            {
+                log.Error("Could not find target purchase order id: (" + targetRenamed + ") in the DB: " + ConstantsEnums.connectionStringName);
+                throw new Exception("The Purchase Order ID you entered is not found in Raw Material Maintenance.");
+            }
+            else
+            {
+                log.Info("target file: (" + targetRenamed + ") was found in the DB: " + ConstantsEnums.connectionStringName);
+            }
+
+            return _value;
+        }
+
+        public int Save()
+        {
+            //todo must implement in concrete class
+            return 0;
         }
     }
 

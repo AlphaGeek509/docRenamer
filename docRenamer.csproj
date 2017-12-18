@@ -113,6 +113,10 @@
       <DependentUpon>renamePrompt.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="TableClasses\LT_DOCUMENT_IMAGING.cs" />
+    <Compile Include="TableClasses\LT_RAW_MATERIAL.cs" />
+    <Compile Include="TableClasses\LT_RM_CONTAINER.cs" />
+    <Compile Include="TableClasses\PURCHASE_ORDER.cs" />
     <Compile Include="TableClasses\RECEIVER.cs" />
     <Compile Include="TableClasses\DOCUMENT_REFERENCE.cs" />
     <Compile Include="TableClasses\DOCUMENT.cs" />

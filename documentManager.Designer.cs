@@ -31,9 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(documentManager));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.supplierPacklist = new System.Windows.Forms.Label();
-            this.rawMaterialCerts = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.customerPurchaseOrders = new System.Windows.Forms.Label();
+            this.materialCert = new System.Windows.Forms.Label();
             this.fileActionsSupplierPacklist = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.radCopy = new System.Windows.Forms.RadioButton();
@@ -66,14 +66,14 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Controls.Add(this.supplierPacklist, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.rawMaterialCerts, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label4, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.customerPurchaseOrders, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.materialCert, 1, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 27);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 49.14481F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.85519F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(212, 195);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
@@ -84,27 +84,13 @@
             this.supplierPacklist.BackColor = System.Drawing.Color.DarkRed;
             this.supplierPacklist.Dock = System.Windows.Forms.DockStyle.Fill;
             this.supplierPacklist.ForeColor = System.Drawing.Color.White;
-            this.supplierPacklist.Location = new System.Drawing.Point(3, 95);
+            this.supplierPacklist.Location = new System.Drawing.Point(3, 97);
             this.supplierPacklist.Name = "supplierPacklist";
-            this.supplierPacklist.Size = new System.Drawing.Size(100, 100);
+            this.supplierPacklist.Size = new System.Drawing.Size(100, 98);
             this.supplierPacklist.TabIndex = 2;
             this.supplierPacklist.Tag = "1";
             this.supplierPacklist.Text = "Supplier Packlists";
             this.supplierPacklist.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // rawMaterialCerts
-            // 
-            this.rawMaterialCerts.AllowDrop = true;
-            this.rawMaterialCerts.AutoSize = true;
-            this.rawMaterialCerts.BackColor = System.Drawing.Color.Blue;
-            this.rawMaterialCerts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rawMaterialCerts.ForeColor = System.Drawing.Color.White;
-            this.rawMaterialCerts.Location = new System.Drawing.Point(109, 0);
-            this.rawMaterialCerts.Name = "rawMaterialCerts";
-            this.rawMaterialCerts.Size = new System.Drawing.Size(100, 95);
-            this.rawMaterialCerts.TabIndex = 1;
-            this.rawMaterialCerts.Text = "Raw Material Certs";
-            this.rawMaterialCerts.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label4
             // 
@@ -112,9 +98,9 @@
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.Yellow;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(109, 95);
+            this.label4.Location = new System.Drawing.Point(109, 97);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(100, 100);
+            this.label4.Size = new System.Drawing.Size(100, 98);
             this.label4.TabIndex = 3;
             this.label4.Text = "Supplier RFQs";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -128,10 +114,23 @@
             this.customerPurchaseOrders.ForeColor = System.Drawing.Color.White;
             this.customerPurchaseOrders.Location = new System.Drawing.Point(3, 0);
             this.customerPurchaseOrders.Name = "customerPurchaseOrders";
-            this.customerPurchaseOrders.Size = new System.Drawing.Size(100, 95);
+            this.customerPurchaseOrders.Size = new System.Drawing.Size(100, 97);
             this.customerPurchaseOrders.TabIndex = 0;
             this.customerPurchaseOrders.Text = "Customer Purchase Orders";
             this.customerPurchaseOrders.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // materialCert
+            // 
+            this.materialCert.AllowDrop = true;
+            this.materialCert.BackColor = System.Drawing.Color.Blue;
+            this.materialCert.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.materialCert.ForeColor = System.Drawing.Color.White;
+            this.materialCert.Location = new System.Drawing.Point(109, 0);
+            this.materialCert.Name = "materialCert";
+            this.materialCert.Size = new System.Drawing.Size(100, 97);
+            this.materialCert.TabIndex = 4;
+            this.materialCert.Text = "Material Certs";
+            this.materialCert.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // fileActionsSupplierPacklist
             // 
@@ -268,7 +267,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -304,7 +303,6 @@
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label rawMaterialCerts;
         private System.Windows.Forms.Label supplierPacklist;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.MenuStrip menuStrip1;
@@ -324,6 +322,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.RadioButton radCopy;
         private System.Windows.Forms.RadioButton radMove;
+        private System.Windows.Forms.Label materialCert;
     }
 }
 
