@@ -44,7 +44,6 @@ namespace docRenamer
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             Label docType = (Label)sender;
-            int saved = 0;
             
             foreach (string file in files) {
                 try {
@@ -53,7 +52,7 @@ namespace docRenamer
                     doc.fileAct.move = radMove.Checked;
 
                     doc.savedFilePath = doc.fileAct.transportFiles(doc.sourcePath, doc.targetPath, doc.targetRenamed);
-                    saved = doc.Save();
+                    var saved = doc.Save();
                 }
                 catch (Exception exc) {
                     log.Error("Problem in executing file: " + file + " (" + exc.Message + ")");
@@ -181,6 +180,8 @@ namespace docRenamer
                     .OfType<ToolStripMenuItem>()
                     .Single();
                 item.Checked = true;
+                ConstantsEnums.connectionStringName = docManager.Properties.Settings.Default.DSN;
+
                 log.Info("Loaded user settings from app.");
             }
             catch (Exception ex)
@@ -230,7 +231,7 @@ namespace docRenamer
         string targetRenamed { get; set; }
         fileAction fileAct   { get; set; }
 
-        int Save();
+        dynamic Save();
     }
 
     public class materialCert : Document
@@ -264,9 +265,9 @@ namespace docRenamer
             }
         }
 
-        public new int Save()
+        public new dynamic Save()
         {
-            return docImagingObj.Insert(new{document_type="Mat_Cert", key2=purchaseOrder, key3=heat, key4=rawMaterialId});
+            return docImagingObj.Insert(new { document_type = "Mat_Cert", key2 = purchaseOrder, key3 = heat, key4 = rawMaterialId, DOCUMENT_PATH = savedFilePath });
         }
     }
     
@@ -350,8 +351,8 @@ namespace docRenamer
         /// </summary>
         /// <param name="srcPath">The source path with filename, too.</param>
         /// <param name="tgtPath">The target path</param>
-        /// <returns></returns>
-        public void transportFiles(string srcPath, string tgtPath, string renameValue = null)
+        /// <returns>string: The complete document and file path.</returns>
+        public string transportFiles(string srcPath, string tgtPath, string renameValue = null)
         {
             string _fileName = Path.GetFileName(srcPath);
             string _fileExentsion = Path.GetExtension(srcPath);
@@ -388,6 +389,7 @@ namespace docRenamer
                     log.Info("File moved successfully - src: (" + _sourceFile + ") target: (" + _destFile + ")");
                 }
 
+                return _destFile;
                 #region CopyDirectories
                 // To copy all the files in one directory to another directory.  Get the files in the source folder.
                 // Directory manipulation is not considered at this time.
@@ -452,6 +454,7 @@ namespace docRenamer
         public string docType       { get; set; }
         public fileAction fileAct   { get; set; }
         public string targetRenamed { get; set; }
+        public string savedFilePath { get; set; }
 
         public Document() {
             serverName  = "\\\\LYNTRON3\\DocumentImages";
@@ -583,10 +586,10 @@ namespace docRenamer
             return _value;
         }
 
-        public int Save()
+        public dynamic Save()
         {
             //todo must implement in concrete class
-            return 0;
+            return null;
         }
     }
 
