@@ -250,10 +250,13 @@ namespace docRenamer
                 docType = "MATERIAL_CERTS";
                 sourcePath = file;
                 targetPath = setTargetPath();
+                serverName = "Y:\\MATERIAL_CERTS";
 
-                rawMaterialId = validateRawMaterialId();
-                purchaseOrder = validatePurchaseOrder();
-                heat = validateHeat();
+                rawMaterialId = promptForRename("Must provide a Raw Material ID to proceed.");
+                purchaseOrder = promptForRename("Must provide a Lyn-Tron Purchase Order # to proceed.");
+                heat = promptForRename("Must provide a Heat to proceed.");
+
+                validateRmContainer(rawMaterialId, purchaseOrder, heat);
 
                 targetRenamed = heat;
 
@@ -267,7 +270,7 @@ namespace docRenamer
 
         public new dynamic Save()
         {
-            return docImagingObj.Insert(new { document_type = "Mat_Cert", key2 = purchaseOrder, key3 = heat, key4 = rawMaterialId, DOCUMENT_PATH = savedFilePath });
+            return docImagingObj.Insert(new { document_type = "Mat_Cert", key2 = purchaseOrder, key3 = heat, key4 = rawMaterialId, status="ACTIVE", document_path = savedFilePath });
         }
     }
     
@@ -286,7 +289,7 @@ namespace docRenamer
                 sourcePath  = file;
                 targetPath = setTargetPath();
 
-                validateReceiver();
+                targetRenamed = validateReceiver();
             }
             catch (Exception e)
             {
@@ -465,6 +468,10 @@ namespace docRenamer
             targetRenamed = "";
         }
 
+        /// <summary>
+        /// Establish a destination path for the document.
+        /// </summary>
+        /// <returns></returns>
         public string setTargetPath()
         {
             if(this.sourcePath != null)
@@ -490,7 +497,28 @@ namespace docRenamer
             
         }
 
+        public int validateRmContainer(string rawMaterialId, string purchaseOrder, string heat)
+        {
+            var doc = new LT_RM_CONTAINER();
+            var isValid = doc.Count(where: "WHERE HEAT=:0 AND PURCHASE_ORDER=:1 AND RAW_MTRL_ID=:2", args: new object[] {heat, purchaseOrder, rawMaterialId});
+            if (isValid == 0)
+            {
+                log.Error("Could not find target heat: (rawMtrlId: " + rawMaterialId + ", purchaseOrderId: " + purchaseOrder + ", heat: " + heat + ") was found in the DB:  " + ConstantsEnums.connectionStringName);
+                throw new Exception("The information you entered was not found in as a single record on LT_RM_CONTAINER.");
+            }
+            else
+            {
+                log.Info("Validated RM Container Data: (rawMtrlId: " + rawMaterialId + ", purchaseOrderId: " + purchaseOrder + ", heat: " + heat + ") was found in the DB: " + ConstantsEnums.connectionStringName);
+            }
 
+            return isValid;
+        }
+
+        /// <summary>
+        /// Generic message prompt soliciting a response
+        /// </summary>
+        /// <param name="messagePrompt"></param>
+        /// <returns></returns>
         public string promptForRename(string messagePrompt)
         {
             renamePrompt frmRename = new renamePrompt();
@@ -508,6 +536,10 @@ namespace docRenamer
             }
         }
 
+        /// <summary>
+        /// Validate purchase order receiver id
+        /// </summary>
+        /// <returns>Receiver ID (R#)</returns>
         public string validateReceiver()
         {
             string _value = promptForRename("Must provide a Receiver ID (R#) to proceed.");
@@ -528,6 +560,10 @@ namespace docRenamer
             return _value;
         }
 
+        /// <summary>
+        /// Validate a lyntron raw material id
+        /// </summary>
+        /// <returns>Raw Material ID</returns>
         public string validateRawMaterialId()
         {
             string _rawMaterialId = promptForRename("Must provide a Raw Material ID to proceed.");
@@ -547,6 +583,10 @@ namespace docRenamer
             return _rawMaterialId;
         }
 
+        /// <summary>
+        /// Validate a raw material heat
+        /// </summary>
+        /// <returns>string - heat</returns>
         public string validateHeat()
         {
             string _heat = promptForRename("Must provide a Heat to proceed.");
@@ -566,6 +606,10 @@ namespace docRenamer
             return _heat;
         }
 
+        /// <summary>
+        /// Validate a purchase order
+        /// </summary>
+        /// <returns>string - purchase order number</returns>
         public string validatePurchaseOrder()
         {
             string _value = promptForRename("Must provide a Lyn-Tron Purchase Order # to proceed.");
